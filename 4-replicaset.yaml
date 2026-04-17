@@ -1,0 +1,73 @@
+# ReplicaSet
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: my-rs
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      env: dev
+  # The below is the details about the pod
+  template:
+    metadata:
+      labels:
+        env: dev
+        tier: frontend
+    spec:
+      containers:
+        - name: nginximage
+          image: nginx    
+
+---
+# kubectl run hydpod --image nginx --labels="env=dev,tier=frontend,dc=hyd"      F1 F2 
+# kubectl run mumpod --image nginx --labels="env=dev,tier=frontend,dc=mum"      F1 F2
+# kubectl run chennaipod --image nginx --labels="env=dev,tier=frontend,dc=chen" F1 F2 F3
+# kubectl run apppod --image nginx --labels="env=dev,tier=rs,dc=hyd"            F1 F2
+# kubectl run banglorepod --image nginx --labels="env=nondev,tier=frontend,dc=chen" * *
+#matchLabels example
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: my-rs
+  labels: 
+    app: app-rs
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      env: dev
+  template:
+    metadata:
+      labels:
+        env: dev
+        tier: frontend
+    spec:
+      containers:
+        - name: my-ctr
+          image: nginx   
+
+---
+#matchLabels and matchExpressions example
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: frontend-matchexpressions
+spec:
+  selector:
+    matchLabels:
+      env: dev
+    matchExpressions:
+      - {key: tier, operator: In, values: [frontend,rs]}  
+      - {key: dc, operator: NotIn, values: [mum, hyd]}
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        env: dev
+        tier: frontend
+    spec:
+      containers:
+        - name: my-ctr
+          image: nginx  
+                     

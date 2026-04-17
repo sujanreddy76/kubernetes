@@ -1,0 +1,20 @@
+#Recreate
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 2
+  strategy: 
+    type: Recreate
+  selector:
+    matchLabels:
+      app: nginx-deployment
+  template:
+    metadata:
+      labels:
+        app: nginx-deployment
+    spec:
+      containers:
+        - name: cont-nginx
+          image: devopswithcloudhub/nginx:blue          

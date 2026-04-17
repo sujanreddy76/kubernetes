@@ -1,0 +1,23 @@
+#RollingUpdate
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate #default
+    rollingUpdate:
+      maxSurge: 1 # Maximum num of pods, that can be created above the desired num of pods 
+      maxUnavailable: 1 # Maximum num of pods that can be unavailable during the update 
+  selector:
+    matchLabels:
+      app: nginx-deployment  
+  template:
+    metadata:
+      labels:
+        app: nginx-deployment
+    spec:
+      containers:
+        - name: cont-nginx
+          image: devopswithcloudhub/nginx:blue      

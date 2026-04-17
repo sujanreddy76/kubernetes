@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-Deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx-deployment
+  template:
+    metadata:
+      label:
+        app: nginx-deployment
+    spec:
+      containers:
+        - image: nginx
+          name: nginx-cont   
+
+# kubectl scale deployment/<deployment-name> --replicas=<count>
+# kubectl set image deployment/<deployment-name> <container-name>=<image-name>           

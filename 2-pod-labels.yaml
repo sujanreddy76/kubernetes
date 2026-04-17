@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cart-pod
+  namespace: bofa-dev-ns
+  labels:
+    app: cart-ms
+    env: dev
+spec:
+  containers:
+    - name: cart-ms
+      image: nginx     

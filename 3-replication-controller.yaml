@@ -1,0 +1,20 @@
+#ReplicationController is old way of doing things, ReplicaSet is new way
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: my-rc
+spec:
+  replicas: 3
+  #the below is the details about the pod
+  template:
+    metadata:
+      labels:
+        env: test
+        dc: mum
+    spec:
+      containers:
+        - image: nginx
+          name: nginximage     
+  selector:
+    env: test
+    dc: mum         
