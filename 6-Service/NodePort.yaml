@@ -1,0 +1,36 @@
+#Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: nodeport-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nodeport
+  template:
+    metadata:
+      labels:
+        app: nodeport  
+    spec:
+      containers:
+        - name: nodeport-cont
+          image: devopswithcloudhub/nginx:blue
+          ports:
+            - containerPort: 80 # Port on the container
+---            
+#Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodeport-service
+spec:
+  type: NodePort
+  selector:
+    app: nodeport
+  ports:
+   - protocol: TCP
+     targetPort: 80 #Port on the container
+     port: 80 #Port on the service
+     nodePort: 30008 #port on the node, if node specified k8s itself will assign available port
+
