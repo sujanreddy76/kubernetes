@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pvvol-1
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany  
+  persistentVolumeReclaimPolicy: Retain  
+  nfs:
+    path: /opt/sfw
+    readOnly: false
+    server: 184.72.83.114  #where your nfs server is available
+
+#capacity, source, accessmode   
+
+---
+# PVC
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-claim
+  namespace: default
+spec:
+  resources:
+    requests:
+      storage: 500Mi
+  accessModes:
+  - ReadWriteMany    
+# size, accessmode    
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: volume-pod
+spec:
+  containers:
+    - name: busybox
+      image: busybox
+      command: ['sh', '-c', "while true; do echo siva!!!! >> /output/output.txt; sleep 5; done"] 
+      volumeMounts:
+        - name: my-claim
+          mountPath: /output 
+  volumes:
+    - name: my-claim
+      persistentVolumeClaim: 
+        claimName: nfs-claim # pvc > pv > NFS(storage disk)    
