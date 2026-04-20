@@ -1,0 +1,23 @@
+# create label for a node: kubectl label node <node-name> environment=nonprod
+# get node labels: kubectl get nodes --show-labels
+# delete label for a node: kubectl label node <node-name> environment- 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodeselector-deploy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      color: blue
+  template:
+    metadata:
+      labels:
+        color: blue
+    spec:
+      containers:
+        - image: nginx
+          name: nginx
+      nodeSelector:
+        environment: nonprod
+                 
