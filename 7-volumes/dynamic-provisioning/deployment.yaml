@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sc-pvc-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: sc-pvc  
+  template:
+    metadata:
+      name: sc-pvc-pod
+      labels:
+        name: sc-pvc  
+    spec:
+      containers:
+        - name: busybox-container
+          image: busybox  
+          command: ['sh', '-c', 'while true; do sleep 3600; done'] 
+          volumeMounts:
+            - name: my-storage
+              mountPath: /sujan
+      volumes:
+        - name: my-storage
+          persistentVolumeClaim:
+            claimName: gold-pvc

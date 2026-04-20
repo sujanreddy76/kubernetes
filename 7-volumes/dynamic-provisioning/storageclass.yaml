@@ -1,0 +1,16 @@
+# Creating a storage class
+
+#platinum
+#gold
+#silver
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: gold
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  type: gp3
+reclaimPolicy: Delete
+
+
+  
