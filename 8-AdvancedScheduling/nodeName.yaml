@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nodename-pod
+spec:
+  # this pod will deploy in the below node (If specified NODE is down then pod will be in pending state)
+  nodeName: ip-192-168-3-203.ec2.internal  
+  containers:
+    - image: nginx
+      name: nginx
+     
