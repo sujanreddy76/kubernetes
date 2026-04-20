@@ -1,0 +1,72 @@
+# kubectl taint node <node-name> key=value:NoSchedule
+# bluedeployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blue-deploy
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      color: blue
+  template:
+    metadata:
+      labels:
+        color: blue
+    spec:
+      containers:
+        - image: nginx
+          name: nginx
+      nodeSelector:
+        color: blue    
+      tolerations:
+        - key: "color"
+          operator: "Equal"
+          value: "blue"        
+---
+# greendeployment
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: green-deploy
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      color: green
+  template:
+    metadata:
+      labels:
+        color: green
+    spec:
+      containers:
+        - image: nginx
+          name: nginx
+      nodeSelector:
+        color: green    
+      tolerations:
+        - key: "color"
+          operator: "Equal"
+          value: "green"
+
+---
+#no taints, no color
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nocolor-deploy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      color: nocolor
+  template:
+    metadata:
+      labels:
+        color: nocolor
+    spec:
+      containers:
+        - image: nginx
+          name: nginx        
+                  
