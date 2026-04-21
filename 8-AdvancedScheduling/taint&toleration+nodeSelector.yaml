@@ -22,7 +22,8 @@ spec:
       tolerations:
         - key: "color"
           operator: "Equal"
-          value: "blue"        
+          value: "blue"  
+          effect: "NoSchedule"      
 ---
 # greendeployment
 
@@ -49,6 +50,7 @@ spec:
         - key: "color"
           operator: "Equal"
           value: "green"
+          effect: "NoSchedule"
 
 ---
 #no taints, no color
