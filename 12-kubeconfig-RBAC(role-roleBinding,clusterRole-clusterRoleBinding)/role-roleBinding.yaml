@@ -1,0 +1,29 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: maha-dev-pod-role
+  namespace: boutique-dev-ns
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "create"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "create"]   
+---
+# Role Binding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: maha-dev-role-Binding
+  namespace: boutique-dev-ns
+subjects:
+  - apiGroup: rbac.authorization.k8s.io
+    kind: User  # We can also give group here if AD is synced all users in group will get access
+    name: maha
+roleRef:
+    kind: Role  
+    name: maha-dev-pod-role
+    apiGroup: rbac.authorization.k8s.io
+
+

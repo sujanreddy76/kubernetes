@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Config
+clusters:
+  - cluster:
+      server: https://172.31.28.79:6443
+      # certificate-authority-data:
+      certificate-authority: /home/siva/ca.crt
+    name: kubeadm-dev-cluster 
+contexts:
+  - context:
+      cluster: kubeadm-dev-cluster
+      user: siva-user
+    name: siva-dev-kubeadm-context     
+users:
+  - name: siva-user
+    user:
+      client-key: /home/siva/siva.key
+      client-certificate: /home/siva/siva.crt
+
