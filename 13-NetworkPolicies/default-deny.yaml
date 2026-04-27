@@ -1,0 +1,52 @@
+# Default deny network policy
+# Denies everything, even within the namspace as well
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namspace: default
+spec:
+  podSelector: {} #This will select all pods in the namespace
+  policyTypes:
+    - Ingress
+    - Egress
+---
+# Default deny, But denies outside the namespace and allows within the namespace
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-outsidens
+  namespace: default
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          namespace: default
+
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          namespace: default
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-http-traffic
+  namespace: default
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  ingress:
+  - ports:
+    - port: 80
+      protocol: TCP            
+    
