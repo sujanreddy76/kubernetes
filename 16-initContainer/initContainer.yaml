@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-with-init
+  labels:
+    app: nginx-init
+spec:
+  volumes:
+  - name: shared-data
+    emptyDir: {}
+  initContainers:
+  - name: init-web-fetch-container
+    image: busybox
+    command:
+    - wget
+    - "-O"
+    - "/shared/index.html"
+    - "https://example.com"
+    volumeMounts:
+    - name: shared-data
+      mountPath: /shared
+  containers:
+  - name: nginx
+    image: nginx:1.23
+    volumeMounts:
+    - name: shared-data
+      mountPath: /usr/share/nginx/html #will use the index.html file saved by init container
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-nodeport-service
+spec:
+  selector:
+    app: nginx-init
+  type: NodePort  
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80            

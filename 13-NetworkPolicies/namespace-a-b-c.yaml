@@ -1,0 +1,136 @@
+# Create 3 namespaces(namespace-a, namespace-b, namespace-c)
+# Allow traffic namespace-b to namspace-a
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-namespace-ba
+  namespace: namespace-a
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: namespace-b  
+
+# Q) If pod in namespace-b → namespace-a is allowed (Ingress), but no Egress policy exists… 👉 Will response come back? 
+# A) YES, response WILL come back ✅, You only defined Ingress policy in namespace-a, That means:❌ Ingress is restricted (only from namespace-b), ✅ Egress is NOT restricted at all (fully open).   
+# A) Behavior for namespace-b pods: You did NOT create any NetworkPolicy in namespace-b, So: Pods in namespace-b are fully open (no restrictions) They can send requests anywhere, They can receive responses.
+---
+# Allow traffic namespace-a to namespace-b
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-namespace-ab
+  namespace: namespace-b
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: namespace-a
+
+---
+# Pod in namespace-a
+# Create pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pod-a
+  namespace: namespace-a
+  labels:
+    app: test
+spec:
+  containers:
+  - name: nginx
+    image: nginx 
+    ports:
+    - containerPort: 80
+---
+# service in namespace-a
+# Service to the above pod
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-service-a
+  namespace: namespace-a
+spec:
+  selector:
+    app: test
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80   
+---
+# Pod in namespace-b
+# Create pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pod-b
+  namespace: namespace-b
+  labels:
+    app: test
+spec:
+  containers:
+  - name: nginx
+    image: nginx 
+    ports:
+    - containerPort: 80
+---
+# service in namespace-b
+# Service to the above pod
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-service-b
+  namespace: namespace-b
+spec:
+  selector:
+    app: test
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80   
+
+---
+# Pod in namespace-c
+# Create pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pod-c
+  namespace: namespace-c
+  labels:
+    app: test
+spec:
+  containers:
+  - name: nginx
+    image: nginx 
+    ports:
+    - containerPort: 80
+---
+# service in namespace-c
+# Service to the above pod
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-service-c
+  namespace: namespace-c
+spec:
+  selector:
+    app: test
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80         
+
+
+
+
+
