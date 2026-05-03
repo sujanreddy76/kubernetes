@@ -1,0 +1,20 @@
+#Guaranteed Pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: guaranteed-pod
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: 
+    - "sh"
+    - "-c"
+    - "echo k8s!!! && sleep 3600"
+    resources:
+      requests:
+        memory: "100Mi"
+        cpu: "100m" #10000m means 10CPU's
+      limits:
+        memory: "100Mi"
+        cpu: "100m"    

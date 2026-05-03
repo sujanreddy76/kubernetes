@@ -1,0 +1,21 @@
+# Deployment with sujanreddy76/nginx: blue
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blue-private-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blue-app
+  template:
+    metadata:
+      labels:
+        app: blue-app
+    spec:
+      imagePullSecrets:
+      - name: docker-registry-secret
+      containers:
+      - name: blue-container
+        image: sujanreddy76/nginx:blue
+  

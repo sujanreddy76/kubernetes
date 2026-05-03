@@ -1,0 +1,9 @@
+#Best effort pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: best-effort-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx
