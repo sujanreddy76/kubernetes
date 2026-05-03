@@ -1,3 +1,5 @@
+# “RollingUpdate and Recreate are Kubernetes deployment strategies that control how pods are replaced,
+#         whereas Blue-Green and Canary are release strategies that control how traffic is shifted between application versions.”
 # Blue Deployment
 apiVersion: apps/v1
 kind: Deployment
