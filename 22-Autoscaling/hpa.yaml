@@ -1,0 +1,45 @@
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-hpa-deployment
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: my-scaling-deployment 
+  template:
+    metadata:
+      labels:
+        app: my-scaling-deployment
+    spec:
+      containers:
+      - name: my-hpa-deployment-pod
+        image: gcr.io/kubernetes-e2e-test-images/resource-consumer:1.5
+        resources:
+          requests:
+            cpu: 100m
+            memory: 200Mi        
+---
+#(Horizntal Pod Autoscaler)HPA  
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: my-hpa
+spec:
+  maxReplicas: 5
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: my-hpa-deployment
+  targetCPUUtilizationPercentage: 50
+
+# NOTE: In Deployment we specified 4 replicas and in HPA we specified minReplicas: 1 then HPA minReplicas will have highest precedence.
+
+# To increase load use below command:
+# curl abb6f7524b56b496089b018943b04614-1273489349.us-east-1.elb.amazonaws.com:8080/ConsumeCPU -d "millicores=500&durationSec=3600"
+
+
+
+
