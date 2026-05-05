@@ -1,0 +1,19 @@
+# failure job
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: hello-job-cron
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+          - name: hello-job
+            image: ubuntu
+            command:
+            - "/bin/bash"
+            - "-c"
+            - "/bin/echo Hello from pod $(hostname) and date: $(date)"  
